@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script type=text/javascript>
+    Function.prototype.call = function(obj,...args){
+      console.log('call()')
+      if (obj === undefined || obj === null) {
+        obj = window
+      }
+      obj.temp = this
+      let result = obj.temp(...args)
+      delete obj.temp
+      return result
+    }
+    Function.prototype.apply = function(obj,args){
+      console.log('aplly()')
+      if (obj === undefined || obj === null) {
+        obj = window
+      }
+      obj.temp = this
+      let result = obj.temp(...args)
+      delete obj.temp
+      return result
+    }
+    Function.prototype.bind = function(obj,...args){
+      console.log('bind()');
+      // this指向有问题
+       return (...args2)=>{
+          return this.call(obj,...args,...args2)
+       }
+    }
+  </script>
+  <script type=text/javascript>
+    let fn = function(a,b){
+      this.xxx = 333
+      console.log(a,b,this);
+    }
+    const obj = {age:719}
+    fn(0,0)
+    fn.call(obj,1,2)
+    fn.call(null)
+    fn.apply(obj,[2,3])
+    fn.bind(obj)(3,4)
+    fn.bind(obj,50,60)(3,4)
+  </script>
+</body>
+</html>
